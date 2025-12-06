@@ -28,7 +28,7 @@ class CoreDiscordWebhook
     {
         if (!$this->setWebhookURL) {
             throw new DiscordWebhookException(
-                "Webhook URL belum di set. Gunakan method setWebhookURL() untuk mengaturnya."
+                "Webhook URL is not set. Use the setWebhookURL() method to set it."
             );
         }
         return $this->setWebhookURL;
@@ -51,7 +51,7 @@ class CoreDiscordWebhook
 
         if (empty($this->content)) {
             throw new DiscordWebhookException(
-                "Pesan belum di set. Gunakan method setMessage() untuk mengaturnya."
+                "The content is not set. Use the text() or setContent() method to set it."
             );
         }
         return json_encode($this->content);

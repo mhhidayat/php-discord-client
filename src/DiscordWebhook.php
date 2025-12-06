@@ -36,14 +36,14 @@ class DiscordWebhook extends CoreDiscordWebhook
 
             if (!is_array($content)) {
                 throw new DiscordWebhookException(
-                    "Callable untuk setMessages() harus mengembalikan array."
+                    "The Closure for setContent() must return an array."
                 );
             }
         } else if (is_array($contentHandler)) {
             $content = $contentHandler;
         } else {
             throw new DiscordWebhookException(
-                "Parameter untuk setMessages() harus berupa array atau Closure yang mengembalikan array."
+                "The parameter to setContent() must be an array or a Closure that returns an array."
             );
         }
 
@@ -59,7 +59,7 @@ class DiscordWebhook extends CoreDiscordWebhook
     {
         if (strlen($text) > 2000) {
             throw new DiscordWebhookException(
-                "Teks terlalu panjang. Maksimal 2000 karakter."
+                "The text is too long. Maximum 2000 characters."
             );
         }
 
@@ -104,7 +104,7 @@ class DiscordWebhook extends CoreDiscordWebhook
     {
         if (empty($headers)) {
             throw new DiscordWebhookException(
-                "withHeaders() membutuhkan array headers yang valid."
+                "withHeaders() requires a valid headers array."
             );
         }
 
@@ -145,14 +145,14 @@ class DiscordWebhook extends CoreDiscordWebhook
 
             if (!is_bool($isSend)) {
                 throw new DiscordWebhookException(
-                    "Callable untuk sendWhen() harus mengembalikan boolean."
+                    "Closure for sendWhen() must return a boolean."
                 );
             }
         } else if (is_bool($isSendHandler)) {
             $isSend = $isSendHandler;
         } else {
             throw new DiscordWebhookException(
-                "Parameter untuk sendWhen() harus berupa boolean atau Closure yang mengembalikan boolean."
+                "The parameter to sendWhen() must be a boolean or a Closure that returns a boolean."
             );
         }
 
