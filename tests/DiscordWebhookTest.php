@@ -28,7 +28,9 @@ final class DiscordWebhookTest extends TestCase
             ->setContent([
                 "content" => "Hello Test"
             ])
-            ->send();
+            ->sendWhen(function () {
+                return 1 == 1;
+            });
 
         $this->assertFalse($respDiscordWebhook->failed());
     }
