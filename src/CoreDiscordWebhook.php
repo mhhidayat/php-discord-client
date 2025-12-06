@@ -46,8 +46,6 @@ class CoreDiscordWebhook
                 "avatar_url" => $this->avatarURL,
                 "tts"        => $this->allowTTS,
             ], fn($v) => $v !== null));
-
-            return json_encode($contentSend);
         }
 
         if (empty($this->content)) {
