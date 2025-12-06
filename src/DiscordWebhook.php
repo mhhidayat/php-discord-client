@@ -48,6 +48,12 @@ class DiscordWebhook extends CoreDiscordWebhook
      */
     public function text(string $text): self
     {
+        if (strlen($text) > 2000) {
+            throw new DiscordWebhookException(
+                "Teks terlalu panjang. Maksimal 2000 karakter."
+            );
+        }
+
         $this->text = $text;
         return $this;
     }
