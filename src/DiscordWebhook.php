@@ -6,6 +6,15 @@ use Closure;
 
 class DiscordWebhook extends CoreDiscordWebhook
 {
+
+    /**
+     * @return self
+     */
+    public static function make(): self
+    {
+        return new self();
+    }
+
     /**
      * @param string $setWebhookURL
      * @return self
