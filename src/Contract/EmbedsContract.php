@@ -94,6 +94,16 @@ class EmbedsContract implements GeneralInterface
     }
 
     /**
+     * @param string $footerText
+     * @return self
+     */
+    public function footerText(string $footerText): self
+    {
+        $this->embedsData["footer"]["text"] = $footerText;
+        return $this;
+    }
+    
+    /**
      * @param array $fields
      * @return self
      */
