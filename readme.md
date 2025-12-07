@@ -29,7 +29,43 @@ DiscordWebhook::make()
     ->send();
 ```
 
-### Custom Content with Embeds
+### Rich Embeds with Builder (New!)
+
+Use the fluent embed builder for creating rich embeds easily:
+
+```php
+use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
+    ->text('Check out this embed!')
+    ->addEmbeds(function (EmbedsContract $embed) {
+        $embed->title('Embed Title')
+              ->description('This is an embed description')
+              ->color(Colors::Blue)
+              ->url('https://example.com')
+              ->enableTimestamp()
+              ->fields([
+                  [
+                      'name' => 'Field 1',
+                      'value' => 'Value 1',
+                      'inline' => true
+                  ],
+                  [
+                      'name' => 'Field 2',
+                      'value' => 'Value 2',
+                      'inline' => true
+                  ]
+              ]);
+    })
+    ->send();
+```
+
+### Custom Content with Embeds (Legacy)
+
+You can still use raw arrays for custom content:
 
 ```php
 DiscordWebhook::make()
@@ -81,6 +117,98 @@ DiscordWebhook::make()
 ```
 
 ## Advanced Usage
+
+### Embed Builder Features
+
+The embed builder provides a fluent interface for creating rich embeds:
+
+```php
+use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
+    ->text('Server Status Update')
+    ->setUsername('Status Bot')
+    ->setAvatar('https://example.com/bot-avatar.png')
+    ->addEmbeds(function (EmbedsContract $embed) {
+        $embed->title('System Status')
+              ->description('All systems are operational')
+              ->color(Colors::Green)
+              ->url('https://status.example.com')
+              ->enableTimestamp()
+              ->authorName('System Monitor')
+              ->authorUrl('https://example.com')
+              ->authorIconUrl('https://example.com/icon.png')
+              ->footerText('Powered by PHP Discord Webhook')
+              ->footerIconUrl('https://example.com/footer-icon.png')
+              ->fields([
+                  [
+                      'name' => 'CPU Usage',
+                      'value' => '45%',
+                      'inline' => true
+                  ],
+                  [
+                      'name' => 'Memory',
+                      'value' => '2.1GB / 8GB',
+                      'inline' => true
+                  ],
+                  [
+                      'name' => 'Uptime',
+                      'value' => '15 days',
+                      'inline' => true
+                  ]
+              ]);
+    })
+    ->send();
+```
+
+### Available Colors Enum
+
+The library includes a comprehensive Colors enum with Discord's official colors:
+
+```php
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
+// Discord Embed Colors
+Colors::Default
+Colors::Aqua
+Colors::DarkAqua
+Colors::Green
+Colors::DarkGreen
+Colors::Blue
+Colors::DarkBlue
+Colors::Purple
+Colors::DarkPurple
+Colors::LuminousVividPink
+Colors::DarkVividPink
+Colors::Gold
+Colors::DarkGold
+Colors::Orange
+Colors::DarkOrange
+Colors::Red
+Colors::DarkRed
+Colors::Grey
+Colors::DarkGrey
+Colors::DarkerGrey
+Colors::LightGrey
+Colors::Navy
+Colors::DarkNavy
+Colors::Yellow
+
+// Official Discord Palette
+Colors::White
+Colors::Greyple
+Colors::Black
+Colors::DarkButNotBlack
+Colors::Blurple
+Colors::DiscordYellow
+Colors::Fuchsia
+
+// You can also use custom integer colors
+->color(16711680) // Custom red color
+```
 
 ### Conditional Sending
 
@@ -177,6 +305,9 @@ Set a simple text message (max 2000 characters).
 #### `setContent(array|Closure $content): self`
 Set custom content including embeds. Accepts an array or closure that returns an array.
 
+#### `addEmbeds(Closure $embedsHandler): self`
+Add rich embeds using the fluent EmbedsContract builder. The closure receives an EmbedsContract instance.
+
 #### `setUsername(string $username): self`
 Override the default webhook username.
 
@@ -209,13 +340,50 @@ Create instance with custom HTTP headers.
 #### `timeout(int $seconds): self`
 Create instance with custom timeout (default: 15 seconds).
 
+### Embed Builder Methods
+
+The EmbedsContract provides these methods for building rich embeds:
+
+#### `title(string $title): self`
+Set the embed title.
+
+#### `description(string $description): self`
+Set the embed description.
+
+#### `url(string $url): self`
+Set the embed URL (makes the title clickable).
+
+#### `color(Colors|int $color): self`
+Set the embed color using the Colors enum or a custom integer.
+
+#### `enableTimestamp(): self`
+Add the current timestamp to the embed.
+
+#### `authorName(string $authorName): self`
+Set the author name.
+
+#### `authorUrl(string $authorUrl): self`
+Set the author URL (makes the author name clickable).
+
+#### `authorIconUrl(string $authorIconUrl): self`
+Set the author icon URL.
+
+#### `footerText(string $footerText): self`
+Set the footer text.
+
+#### `footerIconUrl(string $footerIconUrl): self`
+Set the footer icon URL.
+
+#### `fields(array $fields): self`
+Add fields to the embed (max 10 fields). Each field should have 'name', 'value', and optionally 'inline' keys.
+
 ## Error Handling
 
 The library throws `DiscordWebhookException` for validation errors:
 
 ```php
 use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhookException;
+use Mhhidayat\PhpWebhookDiscord\Exception\DiscordWebhookException;
 
 try {
     DiscordWebhook::make()
@@ -227,69 +395,125 @@ try {
 }
 ```
 
+Common validation errors:
+- Text exceeding 2000 characters
+- More than 10 fields in an embed
+- Missing webhook URL
+- Missing content (no text or setContent called)
+
 ## Examples
 
 ### Notification System
 
 ```php
+use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
 function sendNotification($message, $level = 'info') {
     $colors = [
-        'info' => 3447003,
-        'success' => 3066993,
-        'warning' => 15844367,
-        'error' => 15158332
+        'info' => Colors::Blue,
+        'success' => Colors::Green,
+        'warning' => Colors::Gold,
+        'error' => Colors::Red
+    ];
+    
+    $icons = [
+        'info' => 'ℹ️',
+        'success' => '✅',
+        'warning' => '⚠️',
+        'error' => '🚨'
     ];
     
     DiscordWebhook::make()
         ->setWebhookURL($_ENV['DISCORD_WEBHOOK_URL'])
-        ->setContent([
-            'embeds' => [
-                [
-                    'title' => strtoupper($level),
-                    'description' => $message,
-                    'color' => $colors[$level] ?? $colors['info'],
-                    'timestamp' => date('c')
-                ]
-            ]
-        ])
+        ->addEmbeds(function (EmbedsContract $embed) use ($message, $level, $colors, $icons) {
+            $embed->title($icons[$level] . ' ' . strtoupper($level))
+                  ->description($message)
+                  ->color($colors[$level] ?? Colors::Blue)
+                  ->enableTimestamp();
+        })
         ->send();
 }
 
 sendNotification('User registration completed', 'success');
+sendNotification('Database backup failed', 'error');
 ```
 
 ### Error Logging
 
 ```php
+use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
 function logError($exception) {
     DiscordWebhook::make()
         ->setWebhookURL($_ENV['DISCORD_WEBHOOK_URL'])
         ->setUsername('Error Logger')
-        ->setContent([
-            'embeds' => [
-                [
-                    'title' => '🚨 Error Occurred',
-                    'color' => 15158332,
-                    'fields' => [
-                        [
-                            'name' => 'Message',
-                            'value' => $exception->getMessage()
-                        ],
-                        [
-                            'name' => 'File',
-                            'value' => $exception->getFile()
-                        ],
-                        [
-                            'name' => 'Line',
-                            'value' => $exception->getLine()
-                        ]
-                    ],
-                    'timestamp' => date('c')
-                ]
-            ]
-        ])
+        ->addEmbeds(function (EmbedsContract $embed) use ($exception) {
+            $embed->title('🚨 Error Occurred')
+                  ->description('An exception was thrown in the application')
+                  ->color(Colors::Red)
+                  ->enableTimestamp()
+                  ->fields([
+                      [
+                          'name' => 'Message',
+                          'value' => $exception->getMessage(),
+                          'inline' => false
+                      ],
+                      [
+                          'name' => 'File',
+                          'value' => $exception->getFile(),
+                          'inline' => true
+                      ],
+                      [
+                          'name' => 'Line',
+                          'value' => (string) $exception->getLine(),
+                          'inline' => true
+                      ]
+                  ])
+                  ->footerText('Error Logger v1.0');
+        })
         ->send();
 }
+```
+
+### Deployment Notifications
+
+```php
+use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
+function notifyDeployment($version, $environment, $author) {
+    DiscordWebhook::make()
+        ->setWebhookURL($_ENV['DISCORD_WEBHOOK_URL'])
+        ->setUsername('Deploy Bot')
+        ->addEmbeds(function (EmbedsContract $embed) use ($version, $environment, $author) {
+            $embed->title('🚀 New Deployment')
+                  ->description("Version $version has been deployed to $environment")
+                  ->color(Colors::Blurple)
+                  ->enableTimestamp()
+                  ->authorName($author)
+                  ->fields([
+                      [
+                          'name' => 'Version',
+                          'value' => $version,
+                          'inline' => true
+                      ],
+                      [
+                          'name' => 'Environment',
+                          'value' => $environment,
+                          'inline' => true
+                      ]
+                  ])
+                  ->footerText('Automated Deployment System');
+        })
+        ->send();
+}
+
+notifyDeployment('v2.1.0', 'production', 'John Doe');
 ```
 
 ## License
