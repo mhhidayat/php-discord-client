@@ -3,6 +3,7 @@
 namespace Mhhidayat\PhpWebhookDiscord\Contract;
 
 use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpWebhookDiscord\Exception\DiscordWebhookException;
 use Mhhidayat\PhpWebhookDiscord\Interface\GeneralInterface;
 
 class EmbedsContract implements GeneralInterface
@@ -89,6 +90,11 @@ class EmbedsContract implements GeneralInterface
      */
     public function fields(array $fields): self
     {
+
+        if (count($fields) > 10) {
+            throw new DiscordWebhookException("You can only have 10 fields in an embed");
+        }
+
         $allowedKeys = array_flip([
             "name",
             "value",
