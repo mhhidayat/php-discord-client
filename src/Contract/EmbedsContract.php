@@ -112,6 +112,16 @@ class EmbedsContract implements GeneralInterface
         $this->embedsData["footer"]["icon_url"] = $footerIconUrl;
         return $this;
     }
+
+    /**
+     * @param string $imageUrl
+     * @return self
+     */
+    public function imageUrl(string $imageUrl): self
+    {
+        $this->embedsData["image"]["url"] = $imageUrl;
+        return $this;
+    }
     
     /**
      * @param array $fields
