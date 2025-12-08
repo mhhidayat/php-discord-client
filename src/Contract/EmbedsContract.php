@@ -136,6 +136,16 @@ class EmbedsContract implements GeneralInterface
         $this->embedsData["image"]["height"] = $imageHeight;
         return $this;
     }
+
+    /**
+     * @param int $iamgeWidth
+     * @return self
+     */
+    public function imageWidth(int $iamgeWidth): self
+    {
+        $this->embedsData["image"]["width"] = $iamgeWidth;
+        return $this;
+    }
     
     /**
      * @param array $fields
