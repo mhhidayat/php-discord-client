@@ -143,6 +143,9 @@ DiscordWebhook::make()
               ->authorIconUrl('https://example.com/icon.png')
               ->footerText('Powered by PHP Discord Webhook')
               ->footerIconUrl('https://example.com/footer-icon.png')
+              ->imageUrl('https://example.com/image.png');
+              ->imageHeight(10);
+              ->imageWidth(10);
               ->fields([
                   [
                       'name' => 'CPU Usage',
