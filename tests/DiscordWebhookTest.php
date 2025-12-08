@@ -112,6 +112,7 @@ final class DiscordWebhookTest extends TestCase
                 $e->fields($fieldsData);
                 $e->imageUrl($this->avatarURL);
                 $e->imageHeight(1);
+                $e->imageWidth(1);
             })
             ->sendWhen(function () {
                 return 1 == 1;
