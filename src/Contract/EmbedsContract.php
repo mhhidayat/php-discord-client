@@ -146,6 +146,16 @@ class EmbedsContract implements GeneralInterface
         $this->embedsData["image"]["width"] = $iamgeWidth;
         return $this;
     }
+
+    /**
+     * @param string $thumbnailUrl
+     * @return self
+     */
+    public function thumbnailUrl(string $thumbnailUrl): self
+    {
+        $this->embedsData["thumbnail"]["url"] = $thumbnailUrl;
+        return $this;
+    }
     
     /**
      * @param array $fields
