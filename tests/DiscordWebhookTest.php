@@ -8,7 +8,7 @@ use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
 
 final class DiscordWebhookTest extends TestCase
 {
-    private string $webhookURL, $avatarURL;
+    private string $webhookURL, $avatarURL, $videoURL;
 
     protected function setUp(): void
     {
@@ -17,6 +17,7 @@ final class DiscordWebhookTest extends TestCase
 
         $this->webhookURL = $_ENV["TEST_WEBHOOK_URL"] ?? '';
         $this->avatarURL  = $_ENV["TEST_AVATAR_URL"] ?? '';
+        $this->videoURL  = $_ENV["TEST_VIDEO_URL"] ?? '';
     }
 
     public function testWebhookSuccess()
