@@ -141,14 +141,14 @@ DiscordWebhook::make()
               ->authorName('System Monitor')
               ->authorUrl('https://example.com')
               ->authorIconUrl('https://example.com/icon.png')
+              ->imageUrl('https://example.com/server-chart.png')
+              ->imageWidth(400)
+              ->imageHeight(200)
+              ->thumbnailUrl('https://example.com/status-icon.png')
+              ->thumbnailWidth(80)
+              ->thumbnailHeight(80)
               ->footerText('Powered by PHP Discord Webhook')
               ->footerIconUrl('https://example.com/footer-icon.png')
-              ->imageUrl('https://example.com/image.png');
-              ->imageHeight(10);
-              ->imageWidth(10);
-              ->thumbnailUrl('https://example.com/thumbnail.png');
-              ->thumbnailWidth(10);
-              ->thumbnailHeight(10);
               ->fields([
                   [
                       'name' => 'CPU Usage',
@@ -380,6 +380,30 @@ Set the footer text.
 #### `footerIconUrl(string $footerIconUrl): self`
 Set the footer icon URL.
 
+#### `imageUrl(string $imageUrl): self`
+Set the embed image URL (must be HTTPS).
+
+#### `imageWidth(int $width): self`
+Set the embed image width in pixels.
+
+#### `imageHeight(int $height): self`
+Set the embed image height in pixels.
+
+#### `thumbnailUrl(string $thumbnailUrl): self`
+Set the embed thumbnail URL.
+
+#### `thumbnailWidth(int $width): self`
+Set the embed thumbnail width in pixels.
+
+#### `thumbnailHeight(int $height): self`
+Set the embed thumbnail height in pixels.
+
+#### `providerName(string $providerName): self`
+Set the embed provider name.
+
+#### `providerUrl(string $providerUrl): self`
+Set the embed provider URL.
+
 #### `fields(array $fields): self`
 Add fields to the embed (max 10 fields). Each field should have 'name', 'value', and optionally 'inline' keys.
 
@@ -406,6 +430,7 @@ Common validation errors:
 - More than 10 fields in an embed
 - Missing webhook URL
 - Missing content (no text or setContent called)
+- Image URLs that don't use HTTPS protocol
 
 ## Examples
 
@@ -520,6 +545,84 @@ function notifyDeployment($version, $environment, $author) {
 }
 
 notifyDeployment('v2.1.0', 'production', 'John Doe');
+```
+
+### Rich Media Embeds
+
+Showcase images and thumbnails in your embeds:
+
+```php
+use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+
+function shareScreenshot($title, $imageUrl, $description = '') {
+    DiscordWebhook::make()
+        ->setWebhookURL($_ENV['DISCORD_WEBHOOK_URL'])
+        ->setUsername('Screenshot Bot')
+        ->addEmbeds(function (EmbedsContract $embed) use ($title, $imageUrl, $description) {
+            $embed->title($title)
+                  ->description($description)
+                  ->color(Colors::Purple)
+                  ->imageUrl($imageUrl)
+                  ->imageWidth(800)
+                  ->imageHeight(600)
+                  ->thumbnailUrl('https://example.com/app-icon.png')
+                  ->thumbnailWidth(64)
+                  ->thumbnailHeight(64)
+                  ->enableTimestamp()
+                  ->footerText('Shared via Screenshot Bot');
+        })
+        ->send();
+}
+
+shareScreenshot(
+    'New Feature Preview', 
+    'https://example.com/screenshots/new-feature.png',
+    'Here\'s a preview of our upcoming feature!'
+);
+```
+
+### Product Showcase
+
+Perfect for e-commerce or product announcements:
+
+```php
+function showcaseProduct($name, $price, $imageUrl, $description) {
+    DiscordWebhook::make()
+        ->setWebhookURL($_ENV['DISCORD_WEBHOOK_URL'])
+        ->addEmbeds(function (EmbedsContract $embed) use ($name, $price, $imageUrl, $description) {
+            $embed->title($name)
+                  ->description($description)
+                  ->color(Colors::Gold)
+                  ->imageUrl($imageUrl)
+                  ->imageWidth(500)
+                  ->imageHeight(500)
+                  ->thumbnailUrl('https://example.com/store-logo.png')
+                  ->fields([
+                      [
+                          'name' => '💰 Price',
+                          'value' => $price,
+                          'inline' => true
+                      ],
+                      [
+                          'name' => '📦 Stock',
+                          'value' => 'In Stock',
+                          'inline' => true
+                      ]
+                  ])
+                  ->enableTimestamp()
+                  ->footerText('Online Store');
+        })
+        ->send();
+}
+
+showcaseProduct(
+    'Premium Headphones',
+    '$299.99',
+    'https://example.com/products/headphones.jpg',
+    'High-quality wireless headphones with noise cancellation'
+);
 ```
 
 ## License
