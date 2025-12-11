@@ -188,6 +188,16 @@ class EmbedsContract implements GeneralInterface
     }
 
     /**
+     * @param int $videoHeight
+     * @return self
+     */
+    public function videoHeight(int $videoHeight): self
+    {
+        $this->embedsData["video"]["height"] = $videoHeight;
+        return $this;
+    }
+
+    /**
      * @param string $providerName
      * @return self
      */
