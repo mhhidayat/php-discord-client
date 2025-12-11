@@ -198,6 +198,16 @@ class EmbedsContract implements GeneralInterface
     }
 
     /**
+     * @param int $videoWidth
+     * @return self
+     */
+    public function videoWidth(int $videoWidth): self
+    {
+        $this->embedsData["video"]["width"] = $videoWidth;
+        return $this;
+    }
+
+    /**
      * @param string $providerName
      * @return self
      */
