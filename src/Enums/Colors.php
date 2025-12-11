@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhhidayat\PhpWebhookDiscord\Enum;
+namespace Mhhidayat\PhpWebhookDiscord\Enums;
 
 enum Colors: int
 {

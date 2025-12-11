@@ -2,7 +2,7 @@
 
 namespace Mhhidayat\PhpWebhookDiscord\Contract;
 
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpWebhookDiscord\Enums\Colors;
 use Mhhidayat\PhpWebhookDiscord\Exception\DiscordWebhookException;
 use Mhhidayat\PhpWebhookDiscord\Interface\GeneralInterface;
 
