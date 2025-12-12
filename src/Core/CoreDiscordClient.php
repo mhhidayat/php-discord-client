@@ -3,107 +3,72 @@
 namespace Mhhidayat\PhpDiscordClient\Core;
 
 use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
+use Mhhidayat\PhpDiscordClient\Http\HttpClient;
+use Mhhidayat\PhpDiscordClient\Http\HttpResponse;
 
 class CoreDiscordClient
 {
-
-    protected string $setWebhookURL = "";
-    protected string $JSONResponse = "";
+    protected string $webhookURL = "";
     protected string $text = "";
     protected string $username = "";
     protected string $avatarURL = "";
     protected array $content = [];
-    protected array $headers = [
-        "Content-Type: application/json",
-    ];
     protected array $embeds = [];
-    protected bool $isSuccessful = false, $allowTTS = false;
-    protected int $timeout = 15;
+    protected bool $allowTTS = false;
+    protected ?HttpResponse $lastResponse = null;
+    protected HttpClient $httpClient;
 
-    /**
-     * @param int $statusCode
-     * @return void
-     */
-    protected function parseResponseStatusCode(int $statusCode): void
+    public function __construct(array $headers = [], int $timeout = 15)
     {
-        $this->isSuccessful = $statusCode >= 200 && $statusCode < 300;
+        $this->httpClient = new HttpClient($headers, $timeout);
     }
 
-    /**
-     * @return string
-     */
     protected function getURL(): string
     {
-        if (!$this->setWebhookURL) {
+        if (empty($this->webhookURL)) {
             throw new DiscordClientException(
                 "Webhook URL is not set. Use the setWebhookURL() method to set it."
             );
         }
-        return $this->setWebhookURL;
+        return $this->webhookURL;
     }
 
-    /**
-     * @return string
-     */
-    protected function getContentEncode(): string
+    protected function buildPayload(): array
     {
-        if ($this->text) {
-            $content = ["content" => $this->text];
-
-            if ($this->username) $content["username"] = $this->username;
-            if ($this->avatarURL) $content["avatar_url"] = $this->avatarURL;
-            if ($this->allowTTS) $content["tts"] = $this->allowTTS;
-
-            if (!empty($this->embeds)) {
-                $content["embeds"] = [$this->embeds];
-            }
-
-            return json_encode($content);
-        }
-
-        if (empty($this->content)) {
+        if (!empty($this->text)) {
+            $payload = ["content" => $this->text];
+        } elseif (!empty($this->content)) {
+            $payload = $this->content;
+        } else {
             throw new DiscordClientException(
-                "The content is not set. Use the text() or setContent() method to set it."
+                "No content is set. Use the text() or setContent() method to set it."
             );
         }
 
-        $content = $this->content;
-        if (!empty($this->embeds)) {
-            $content["embeds"] = [$this->embeds];
+        if (!empty($this->username)) {
+            $payload["username"] = $this->username;
+        }
+        
+        if (!empty($this->avatarURL)) {
+            $payload["avatar_url"] = $this->avatarURL;
+        }
+        
+        if ($this->allowTTS) {
+            $payload["tts"] = true;
         }
 
-        return json_encode($content);
+        if (!empty($this->embeds)) {
+            $payload["embeds"] = [$this->embeds];
+        }
+
+        return $payload;
     }
 
-    /**
-     * Send request to Discord webhook
-     * @return void
-     */
-    protected function httpRequestClient(): void
+    protected function sendRequest(): void
     {
         $url = $this->getURL();
-        $reqClient = $this->getContentEncode();
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $reqClient);
+        $payload = json_encode($this->buildPayload());
         
-        $response = curl_exec($ch);
-        
-        if ($response === false) {
-            $error = curl_error($ch);
-            curl_close($ch);
-            throw new DiscordClientException("cURL error: " . $error);
-        }
-        
-        $this->JSONResponse = $response;
-        $responseStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        
-        $this->parseResponseStatusCode($responseStatusCode);
+        $this->lastResponse = $this->httpClient->post($url, $payload);
     }
 }
