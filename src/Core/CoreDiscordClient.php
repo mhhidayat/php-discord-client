@@ -7,10 +7,16 @@ use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
 class CoreDiscordClient
 {
 
-    protected string $setWebhookURL = "", $JSONResponse = "", $text = "", $username = "", $avatarURL = "";
-    protected array $content, $headers = [
+    protected string $setWebhookURL = "";
+    protected string $JSONResponse = "";
+    protected string $text = "";
+    protected string $username = "";
+    protected string $avatarURL = "";
+    protected array $content = [];
+    protected array $headers = [
         "Content-Type: application/json",
-    ], $embeds = [];
+    ];
+    protected array $embeds = [];
     protected bool $isSuccessful = false, $allowTTS = false;
     protected int $timeout = 15;
 
@@ -49,7 +55,7 @@ class CoreDiscordClient
             if ($this->allowTTS) $content["tts"] = $this->allowTTS;
 
             if (!empty($this->embeds)) {
-                $content["embeds"][] = $this->embeds;
+                $content["embeds"] = [$this->embeds];
             }
 
             return json_encode($content);
@@ -63,14 +69,14 @@ class CoreDiscordClient
 
         $content = $this->content;
         if (!empty($this->embeds)) {
-            $content["embeds"][] = $this->embeds;
+            $content["embeds"] = [$this->embeds];
         }
 
         return json_encode($content);
     }
 
     /**
-     * Mengirim request ke Discord webhook
+     * Send request to Discord webhook
      * @return void
      */
     protected function httpRequestClient(): void
@@ -85,9 +91,19 @@ class CoreDiscordClient
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $reqClient);
-        $this->JSONResponse = curl_exec($ch);
-
+        
+        $response = curl_exec($ch);
+        
+        if ($response === false) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            throw new DiscordClientException("cURL error: " . $error);
+        }
+        
+        $this->JSONResponse = $response;
         $responseStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
         $this->parseResponseStatusCode($responseStatusCode);
     }
 }
