@@ -5,8 +5,9 @@ namespace Mhhidayat\PhpDiscordClient;
 use Closure;
 use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
 use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
+use Mhhidayat\PhpDiscordClient\Core\CoreDiscordClient;
 
-class DiscordWebhook extends CoreDiscordWebhook
+class DiscordWebhook extends CoreDiscordClient
 {
 
     /**

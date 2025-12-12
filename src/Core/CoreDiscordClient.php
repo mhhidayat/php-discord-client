@@ -1,10 +1,10 @@
 <?php
 
-namespace Mhhidayat\PhpDiscordClient;
+namespace Mhhidayat\PhpDiscordClient\Core;
 
 use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
 
-class CoreDiscordWebhook
+class CoreDiscordClient
 {
 
     protected string $setWebhookURL = "", $JSONResponse = "", $text = "", $username = "", $avatarURL = "";
