@@ -23,6 +23,14 @@ class MainDiscordClient extends CoreDiscordClient
      */
     public function setWebhookURL(string $setWebhookURL): self
     {
+        if (empty(trim($setWebhookURL))) {
+            throw new DiscordClientException("Webhook URL cannot be empty.");
+        }
+        
+        if (!filter_var($setWebhookURL, FILTER_VALIDATE_URL)) {
+            throw new DiscordClientException("Invalid webhook URL format.");
+        }
+        
         $this->setWebhookURL = $setWebhookURL;
         return $this;
     }
@@ -87,6 +95,10 @@ class MainDiscordClient extends CoreDiscordClient
      */
     public function setUsername(string $username): self
     {
+        if (strlen($username) > 80) {
+            throw new DiscordClientException("Username cannot exceed 80 characters.");
+        }
+        
         $this->username = $username;
         return $this;
     }
@@ -97,6 +109,10 @@ class MainDiscordClient extends CoreDiscordClient
      */
     public function setAvatar(string $avatarURL): self
     {
+        if (!filter_var($avatarURL, FILTER_VALIDATE_URL)) {
+            throw new DiscordClientException("Invalid avatar URL format.");
+        }
+        
         $this->avatarURL = $avatarURL;
         return $this;
     }
