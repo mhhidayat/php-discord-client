@@ -1,8 +1,8 @@
 <?php
 
-namespace Mhhidayat\PhpWebhookDiscord;
+namespace Mhhidayat\PhpDiscordClient;
 
-use Mhhidayat\PhpWebhookDiscord\Exception\DiscordWebhookException;
+use Mhhidayat\PhpDiscordClient\Exception\DiscordWebhookException;
 
 class CoreDiscordWebhook
 {

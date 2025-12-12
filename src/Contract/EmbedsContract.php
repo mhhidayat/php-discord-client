@@ -1,10 +1,10 @@
 <?php
 
-namespace Mhhidayat\PhpWebhookDiscord\Contract;
+namespace Mhhidayat\PhpDiscordClient\Contract;
 
-use Mhhidayat\PhpWebhookDiscord\Enums\Colors;
-use Mhhidayat\PhpWebhookDiscord\Exception\DiscordWebhookException;
-use Mhhidayat\PhpWebhookDiscord\Interface\GeneralInterface;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
+use Mhhidayat\PhpDiscordClient\Exception\DiscordWebhookException;
+use Mhhidayat\PhpDiscordClient\Interface\GeneralInterface;
 
 class EmbedsContract implements GeneralInterface
 {

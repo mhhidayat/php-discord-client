@@ -2,9 +2,9 @@
 
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
-use Mhhidayat\PhpWebhookDiscord\Enums\Colors;
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
 
 final class DiscordWebhookTest extends TestCase
 {

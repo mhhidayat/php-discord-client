@@ -1,5 +1,5 @@
 <?php
 
-namespace Mhhidayat\PhpWebhookDiscord\Exception;
+namespace Mhhidayat\PhpDiscordClient\Exception;
 
 class DiscordWebhookException extends \Exception {}

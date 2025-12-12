@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhhidayat\PhpWebhookDiscord\Interface;
+namespace Mhhidayat\PhpDiscordClient\Interface;
 
 interface GeneralInterface {
     public function build(): array;
