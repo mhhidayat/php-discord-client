@@ -21,7 +21,7 @@ composer require mhhidayat/php-webhook-discord
 ### Simple Text Message
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
 
 DiscordWebhook::make()
     ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
@@ -34,9 +34,9 @@ DiscordWebhook::make()
 Use the fluent embed builder for creating rich embeds easily:
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 DiscordWebhook::make()
     ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
@@ -123,9 +123,9 @@ DiscordWebhook::make()
 The embed builder provides a fluent interface for creating rich embeds:
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 DiscordWebhook::make()
     ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
@@ -175,7 +175,7 @@ DiscordWebhook::make()
 The library includes a comprehensive Colors enum with Discord's official colors:
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 // Discord Embed Colors
 Colors::Default
@@ -409,18 +409,18 @@ Add fields to the embed (max 10 fields). Each field should have 'name', 'value',
 
 ## Error Handling
 
-The library throws `DiscordWebhookException` for validation errors:
+The library throws `DiscordClientException` for validation errors:
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Exception\DiscordWebhookException;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
 
 try {
     DiscordWebhook::make()
         ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
         ->text(str_repeat('a', 2001)) // Too long!
         ->send();
-} catch (DiscordWebhookException $e) {
+} catch (DiscordClientException $e) {
     echo "Error: " . $e->getMessage();
 }
 ```
@@ -437,9 +437,9 @@ Common validation errors:
 ### Notification System
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 function sendNotification($message, $level = 'info') {
     $colors = [
@@ -474,9 +474,9 @@ sendNotification('Database backup failed', 'error');
 ### Error Logging
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 function logError($exception) {
     DiscordWebhook::make()
@@ -513,9 +513,9 @@ function logError($exception) {
 ### Deployment Notifications
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 function notifyDeployment($version, $environment, $author) {
     DiscordWebhook::make()
@@ -552,9 +552,9 @@ notifyDeployment('v2.1.0', 'production', 'John Doe');
 Showcase images and thumbnails in your embeds:
 
 ```php
-use Mhhidayat\PhpWebhookDiscord\DiscordWebhook;
-use Mhhidayat\PhpWebhookDiscord\Contract\EmbedsContract;
-use Mhhidayat\PhpWebhookDiscord\Enum\Colors;
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
 
 function shareScreenshot($title, $imageUrl, $description = '') {
     DiscordWebhook::make()
