@@ -4,9 +4,9 @@ namespace Mhhidayat\PhpDiscordClient\Contract;
 
 use Mhhidayat\PhpDiscordClient\Enums\Colors;
 use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
-use Mhhidayat\PhpDiscordClient\Interface\GeneralInterface;
+use Mhhidayat\PhpDiscordClient\Interface\ContractInterface;
 
-class EmbedsContract implements GeneralInterface
+class EmbedsContract implements ContractInterface
 {
     private array $embedsData = [];
 

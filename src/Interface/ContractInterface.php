@@ -2,6 +2,6 @@
 
 namespace Mhhidayat\PhpDiscordClient\Interface;
 
-interface GeneralInterface {
+interface ContractInterface {
     public function build(): array;
 }
