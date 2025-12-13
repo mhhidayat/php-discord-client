@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Mhhidayat\PhpDiscordClient\Interface;
 
 use Closure;
