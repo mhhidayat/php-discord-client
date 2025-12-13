@@ -11,7 +11,8 @@ class DiscordWebhook implements DiscordWebhookInterface
 
     public function __construct()
     {
-        $this->client = new MainDiscordClient();
+        $this->client = (new MainDiscordClient())
+            ->setClientTarget($this);
     }
 
     public static function make(): self
