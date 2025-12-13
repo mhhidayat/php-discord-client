@@ -130,7 +130,6 @@ final class DiscordWebhookTest extends TestCase
         $this->assertTrue($respDiscordWebhook->successful());
     }
 
-    
     public function testWebhookEmbedError()
     {
         $respDiscordWebhook = DiscordWebhook::make()
@@ -144,6 +143,19 @@ final class DiscordWebhookTest extends TestCase
             ->sendWhen(function () {
                 return 1 == 1;
             });
+        $this->assertTrue($respDiscordWebhook->successful());
+    }
+
+    public function testWebhookWithConfig()
+    {
+        $respDiscordWebhook = DiscordWebhook::withConfig([
+                "webhook_url" => $this->webhookURL,
+                "username" => "mhhidayat",
+                "avatar_url" => $this->avatarURL,
+            ])
+            ->text("Hello test")
+            ->send();
+
         $this->assertTrue($respDiscordWebhook->successful());
     }
 }
