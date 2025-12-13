@@ -18,6 +18,31 @@ class MainDiscordClient extends CoreDiscordClient
     }
 
     /**
+     * @param array $headers
+     * @return self
+     */
+    public static function withHeaders(array $headers): self
+    {
+        if (empty($headers)) {
+            throw new DiscordClientException(
+                "withHeaders() requires a valid headers array."
+            );
+        }
+
+        return new self($headers);
+    }
+
+    /**
+     * By default timeout is 15 seconds
+     * @param int $seconds
+     * @return self
+     */
+    public static function timeout(int $seconds): self
+    {
+        return new self([], $seconds);
+    }
+
+    /**
      * @param string $webhookURL
      * @return self
      */
@@ -124,31 +149,6 @@ class MainDiscordClient extends CoreDiscordClient
     {
         $this->allowTTS = true;
         return $this;
-    }
-
-    /**
-     * @param array $headers
-     * @return self
-     */
-    public static function withHeaders(array $headers): self
-    {
-        if (empty($headers)) {
-            throw new DiscordClientException(
-                "withHeaders() requires a valid headers array."
-            );
-        }
-
-        return new self($headers);
-    }
-
-    /**
-     * By default timeout is 15 seconds
-     * @param int $seconds
-     * @return self
-     */
-    public static function timeout(int $seconds): self
-    {
-        return new self([], $seconds);
     }
 
     /**

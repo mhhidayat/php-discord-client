@@ -19,6 +19,20 @@ class DiscordWebhook implements DiscordWebhookInterface
         return new self();
     }
 
+    public static function withHeaders(array $headers): self
+    {
+        $instance = new self();
+        $instance->client = MainDiscordClient::withHeaders($headers);
+        return $instance;
+    }
+
+    public static function timeout(int $seconds): self
+    {
+        $instance = new self();
+        $instance->client = MainDiscordClient::timeout($seconds);
+        return $instance;
+    }
+
     public function setWebhookURL(string $setWebhookURL): self
     {
         $this->client->setWebhookURL($setWebhookURL);
@@ -59,20 +73,6 @@ class DiscordWebhook implements DiscordWebhookInterface
     {
         $this->client->allowTTS();
         return $this;
-    }
-
-    public static function withHeaders(array $headers): self
-    {
-        $instance = new self();
-        $instance->client = MainDiscordClient::withHeaders($headers);
-        return $instance;
-    }
-
-    public static function timeout(int $seconds): self
-    {
-        $instance = new self();
-        $instance->client = MainDiscordClient::timeout($seconds);
-        return $instance;
     }
 
     public function send(): self
