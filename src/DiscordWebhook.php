@@ -19,6 +19,25 @@ class DiscordWebhook implements DiscordWebhookInterface
         return new self();
     }
 
+    public static function withConfig(array $config): self
+    {
+        $webhook = new self();
+        
+        if (isset($config['webhook_url'])) {
+            $webhook->client->setWebhookURL($config['webhook_url']);
+        }
+        
+        if (isset($config['username'])) {
+            $webhook->client->setUsername($config['username']);
+        }
+        
+        if (isset($config['avatar_url'])) {
+            $webhook->client->setAvatar($config['avatar_url']);
+        }
+        
+        return $webhook;
+    }
+
     public static function withHeaders(array $headers): self
     {
         $instance = new self();
