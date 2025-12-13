@@ -9,14 +9,6 @@ use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
 class MainDiscordClient extends CoreDiscordClient
 {
 
-    /**
-     * @return self
-     */
-    public static function make(): self
-    {
-        return new self();
-    }
-
     public static function withConfig(array $config): self
     {
         $webhook = new self();
