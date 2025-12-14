@@ -1,6 +1,7 @@
 {
     "name": "mhhidayat/php-discord-client",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Mhhidayat\\PhpDiscordClient\\": "src/"
