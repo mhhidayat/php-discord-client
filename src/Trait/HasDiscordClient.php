@@ -18,6 +18,10 @@ trait HasDiscordClient {
         return new self();
     }
 
+    /**
+     * @param array $config
+     * @return self
+     */
     public static function withConfig(array $config): self
     {
         $instance = new self();
