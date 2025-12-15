@@ -19,10 +19,6 @@ trait HasDiscordClient {
     {
         $instance = new self();
         
-        if (isset($config['webhook_url'])) {
-            $instance->setWebhookURL($config['webhook_url']);
-        }
-        
         if (isset($config['username'])) {
             $instance->setUsername($config['username']);
         }
