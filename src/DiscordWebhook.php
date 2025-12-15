@@ -3,8 +3,9 @@
 namespace Mhhidayat\PhpDiscordClient;
 
 use Mhhidayat\PhpDiscordClient\Core\CoreDiscordClient;
-use Mhhidayat\PhpDiscordClient\Interface\DiscordWebhookInterface;
 use Mhhidayat\PhpDiscordClient\Trait\HasDiscordClient;
+use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
+use Mhhidayat\PhpDiscordClient\Interface\DiscordWebhookInterface;
 
 /**
  * Discord Webhook Client
@@ -31,4 +32,18 @@ use Mhhidayat\PhpDiscordClient\Trait\HasDiscordClient;
 class DiscordWebhook extends CoreDiscordClient implements DiscordWebhookInterface
 {
     use HasDiscordClient;
+
+    public function setWebhookURL(string $webhookURL): self
+    {
+        if (empty(trim($webhookURL))) {
+            throw new DiscordClientException("Webhook URL cannot be empty.");
+        }
+        
+        if (!filter_var($webhookURL, FILTER_VALIDATE_URL)) {
+            throw new DiscordClientException("Invalid webhook URL format.");
+        }
+        
+        $this->webhookURL = $webhookURL;
+        return $this;
+    }
 }
