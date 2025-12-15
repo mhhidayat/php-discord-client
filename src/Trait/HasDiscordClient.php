@@ -10,6 +10,9 @@ use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
  */
 trait HasDiscordClient {
 
+    /**
+     * @return self
+     */
     public static function make(): self
     {
         return new self();
