@@ -19,6 +19,12 @@ class EmbedsFieldsContract implements ContractInterface
         return $this;
     }
 
+    public function value(string $value): self
+    {
+        $this->fieldsData[$this->currentIndex]['value'] = $value;
+        return $this;
+    }
+
     public function build(): array
     {
         return $this->fieldsData;
