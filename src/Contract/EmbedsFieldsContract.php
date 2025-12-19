@@ -2,6 +2,7 @@
 
 namespace Mhhidayat\PhpDiscordClient\Contract;
 
+use Mhhidayat\PhpDiscordClient\Exception\DiscordClientException;
 use Mhhidayat\PhpDiscordClient\Interface\ContractInterface;
 
 class EmbedsFieldsContract implements ContractInterface
@@ -29,6 +30,10 @@ class EmbedsFieldsContract implements ContractInterface
      */
     public function value(string $value): self
     {
+        if ($this->currentIndex === -1) {
+            throw new DiscordClientException('Call name() before value()');
+        }
+
         $this->fieldsData[$this->currentIndex]['value'] = $value;
         return $this;
     }
