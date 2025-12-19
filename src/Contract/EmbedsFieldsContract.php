@@ -23,6 +23,10 @@ class EmbedsFieldsContract implements ContractInterface
         return $this;
     }
 
+    /**
+     * @param string $value
+     * @return self
+     */
     public function value(string $value): self
     {
         $this->fieldsData[$this->currentIndex]['value'] = $value;
