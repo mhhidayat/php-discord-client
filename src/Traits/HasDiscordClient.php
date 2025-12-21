@@ -20,21 +20,35 @@ trait HasDiscordClient {
 
     public static function withConfig(array $config): self
     {
+        [
+            'webhook_url' => $webhookURL,
+            'username' => $username,
+            'avatar_url' => $avatarURL,
+            'channel_id' => $channelID,
+            'bot_token' => $botToken
+        ] = $config + [
+            'webhook_url' => null,
+            'username' => null,
+            'avatar_url' => null,
+            'channel_id' => null,
+            'bot_token' => null
+        ];
+        
         $instance = new self();
         
         if ($instance->discordClientTarget == "bot") {
-            $instance->channelID = $config['channel_id'];
-            $instance->botToken = $config['bot_token'];
+            $instance->channelID = $channelID;
+            $instance->botToken = $botToken;
         } elseif ($instance->discordClientTarget == "webhook") {
-            $instance->webhookURL = $config['webhook_url'];
+            $instance->webhookURL = $webhookURL;
         }
         
-        if (isset($config['username'])) {
-            $instance->username = $config['username'];
+        if ($username) {
+            $instance->username = $username;
         }
         
-        if (isset($config['avatar_url'])) {
-            $instance->avatar_url = $config['avatar_url'];
+        if ($avatarURL) {
+            $instance->avatar_url = $avatarURL;
         }
         
         return $instance;
