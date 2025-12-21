@@ -5,6 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Mhhidayat\PhpDiscordClient\Enums\Colors;
 use Mhhidayat\PhpDiscordClient\DiscordWebhook;
 use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsFieldsContract;
 
 final class DiscordWebhookTest extends TestCase
 {
@@ -110,7 +111,13 @@ final class DiscordWebhookTest extends TestCase
                 $e->authorIconUrl($this->avatarURL);
                 $e->footerText("My footer text");
                 $e->footerIconUrl($this->avatarURL);
-                $e->fields($fieldsData);
+                $e->fields(function (EmbedsFieldsContract $f) use($fieldsData) {
+                    foreach ($fieldsData as $field) {
+                        $f->name($field["name"]);
+                        $f->value($field["value"]);
+                        $f->inline($field["inline"]);
+                    }
+                });
                 $e->imageUrl($this->avatarURL);
                 $e->imageHeight(1);
                 $e->imageWidth(1);
