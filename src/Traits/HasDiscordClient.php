@@ -44,6 +44,9 @@ trait HasDiscordClient {
             $instance->channelID = $channelID;
             $instance->botToken = $botToken;
         } elseif ($instance->discordClientTarget == "webhook") {
+            if (!filter_var($webhookURL, FILTER_VALIDATE_URL)) {
+                throw new DiscordClientException("Invalid webhook URL format.");
+            }
             $instance->webhookURL = $webhookURL;
         }
         
