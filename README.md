@@ -17,6 +17,11 @@ A comprehensive PHP library for interacting with Discord via both webhooks and b
 - cURL extension enabled
 - Composer
 
+## Dependencies
+
+This library includes:
+- `vlucas/phpdotenv` for environment variable management (useful for storing tokens and webhook URLs securely)
+
 ## Installation
 
 Install via Composer:
@@ -266,6 +271,53 @@ DiscordBot::make()
 
 ## Advanced Usage
 
+### Advanced Embed Fields with Builder
+
+For more complex field management, you can use the EmbedsFieldsContract:
+
+```php
+use Mhhidayat\PhpDiscordClient\DiscordWebhook;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsContract;
+use Mhhidayat\PhpDiscordClient\Contract\EmbedsFieldsContract;
+use Mhhidayat\PhpDiscordClient\Enums\Colors;
+
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
+    ->addEmbeds(function (EmbedsContract $embed) {
+        $embed->title('Server Statistics')
+              ->description('Current server performance metrics')
+              ->color(Colors::Blue)
+              ->fields(function (EmbedsFieldsContract $fields) {
+                  $fields->name('CPU Usage')->value('45%')->inline(true);
+                  $fields->name('Memory')->value('2.1GB / 8GB')->inline(true);
+                  $fields->name('Disk Space')->value('120GB / 500GB')->inline(true);
+                  $fields->name('Network')->value('1.2 Mbps')->inline(true);
+                  $fields->name('Uptime')->value('15 days, 4 hours')->inline(true);
+                  $fields->name('Status')->value('✅ All systems operational')->inline(false);
+              });
+    })
+    ->send();
+```
+
+### Video Embeds
+
+Include video content in your embeds:
+
+```php
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_WEBHOOK_URL')
+    ->addEmbeds(function (EmbedsContract $embed) {
+        $embed->title('Tutorial Video')
+              ->description('Learn how to use our new feature')
+              ->color(Colors::Purple)
+              ->videoUrl('https://example.com/tutorial.mp4')
+              ->videoWidth(1280)
+              ->videoHeight(720)
+              ->thumbnailUrl('https://example.com/video-thumbnail.jpg');
+    })
+    ->send();
+```
+
 ### Embed Builder Features
 
 The embed builder provides a fluent interface for creating rich embeds:
@@ -360,6 +412,11 @@ Colors::Blurple
 Colors::DiscordYellow
 Colors::Fuchsia
 
+// Additional Role Colors
+Colors::UnnamedRole1
+Colors::UnnamedRole2
+Colors::BackgroundBlack
+
 // You can also use custom integer colors
 ->color(16711680) // Custom red color
 ```
@@ -442,6 +499,46 @@ if ($webhook->failed()) {
     echo $webhook->getResponseJson();
 }
 ```
+
+## Security Best Practices
+
+### Environment Variables
+
+Store sensitive information like bot tokens and webhook URLs in environment variables:
+
+```php
+// .env file
+DISCORD_BOT_TOKEN=your_bot_token_here
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your_webhook_url
+DISCORD_CHANNEL_ID=your_channel_id_here
+
+// In your PHP code
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+// Using with webhook
+DiscordWebhook::make()
+    ->setWebhookURL($_ENV['DISCORD_WEBHOOK_URL'])
+    ->text('Secure message!')
+    ->send();
+
+// Using with bot
+DiscordBot::make()
+    ->setBotToken($_ENV['DISCORD_BOT_TOKEN'])
+    ->setChannelID($_ENV['DISCORD_CHANNEL_ID'])
+    ->text('Secure bot message!')
+    ->send();
+```
+
+### Token Security
+
+- Never commit tokens or webhook URLs to version control
+- Use environment variables or secure configuration management
+- Rotate tokens regularly
+- Limit bot permissions to only what's needed
+- Monitor bot usage and API calls
 
 ## API Reference
 
@@ -565,8 +662,33 @@ Set the embed provider name.
 #### `providerUrl(string $providerUrl): self`
 Set the embed provider URL.
 
-#### `fields(array $fields): self`
-Add fields to the embed (max 10 fields). Each field should have 'name', 'value', and optionally 'inline' keys.
+### Embed Fields Builder Methods
+
+The EmbedsFieldsContract provides these methods for building embed fields:
+
+#### `name(string $name): self`
+Set the field name. Must be called before value() and inline().
+
+#### `value(string $value): self`
+Set the field value. Must be called after name().
+
+#### `inline(bool $inline): self`
+Set whether the field should be displayed inline. Must be called after name().
+
+#### `build(): array`
+Build and return the fields array (used internally).
+
+#### `fields(array|Closure $fields): self`
+Add fields to the embed (max 25 fields). Each field should have 'name', 'value', and optionally 'inline' keys. Accepts either an array or a closure with EmbedsFieldsContract for more control.
+
+#### `videoUrl(string $videoUrl): self`
+Set the embed video URL.
+
+#### `videoWidth(int $width): self`
+Set the embed video width in pixels.
+
+#### `videoHeight(int $height): self`
+Set the embed video height in pixels.
 
 ## Error Handling
 
@@ -588,10 +710,13 @@ try {
 
 Common validation errors:
 - Text exceeding 2000 characters
-- More than 10 fields in an embed
-- Missing webhook URL
+- More than 25 fields in an embed
+- Missing webhook URL (for webhooks)
+- Missing bot token or channel ID (for bots)
 - Missing content (no text or setContent called)
 - Image URLs that don't use HTTPS protocol
+- Embed title exceeding 256 characters
+- Embed description exceeding 4096 characters
 
 ## Examples
 
@@ -821,6 +946,62 @@ showcaseProduct(
     'https://example.com/products/headphones.jpg',
     'High-quality wireless headphones with noise cancellation'
 );
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**"Webhook URL is not set" Error**
+```php
+// ❌ Wrong - missing webhook URL
+DiscordWebhook::make()->text('Hello')->send();
+
+// ✅ Correct - set webhook URL first
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_URL')
+    ->text('Hello')
+    ->send();
+```
+
+**"No content is set" Error**
+```php
+// ❌ Wrong - no content
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_URL')
+    ->send();
+
+// ✅ Correct - add content
+DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_URL')
+    ->text('Hello World')
+    ->send();
+```
+
+**Bot Messages Not Sending**
+- Verify bot token is correct
+- Ensure bot has "Send Messages" permission in the target channel
+- Check that channel ID is correct
+- Confirm bot is added to the server
+
+**Webhook Messages Not Appearing**
+- Verify webhook URL is correct and active
+- Check webhook hasn't been deleted from Discord
+- Ensure webhook has permission to post in the channel
+
+### Debug Response
+
+Check the response from Discord for debugging:
+
+```php
+$webhook = DiscordWebhook::make()
+    ->setWebhookURL('https://discord.com/api/webhooks/YOUR_URL')
+    ->text('Test message')
+    ->send();
+
+if ($webhook->failed()) {
+    echo "Error: " . $webhook->getResponseJson();
+}
 ```
 
 ## License
