@@ -83,6 +83,10 @@ abstract class CoreDiscordClient
             $payload["embeds"] = [$this->embeds];
         }
 
+        $payload["allowed_mentions"] = [
+            "parse" => ["everyone"]
+        ];
+
         return $payload;
     }
 
