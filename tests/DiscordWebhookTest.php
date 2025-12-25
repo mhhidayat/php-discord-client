@@ -160,7 +160,7 @@ final class DiscordWebhookTest extends TestCase
                 "username" => "mhhidayat",
                 "avatar_url" => $this->avatarURL,
             ])
-            ->text("Hello test")
+            ->text("Hello test @everyone")
             ->send();
 
         $this->assertTrue($respDiscordWebhook->successful());
